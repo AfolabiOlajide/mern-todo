@@ -50,3 +50,17 @@ export const updateTask = async (req, res, next) => {
         return next(error);
     }
 }
+
+
+export const deleteTask = async (req, res, next) => {
+    try {
+        const task = await Task.findById(req.params.taskId).exec();
+        if(!task) return next(createError({ message: "No task found", status: 404 }));
+        if(task.user.toString() !== req.user.id) return next(createError({ message: "Unauthorized access", status: 401 }));
+
+        await Task.findByIdAndDelete(req.params.taskId);
+        return res.status(200).json("Task deleted successfully");
+    } catch (error) {
+        return next(error);
+    }
+}
