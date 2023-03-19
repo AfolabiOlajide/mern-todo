@@ -1,19 +1,20 @@
 import React, { useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import useAuth from '../../hooks/useAuth';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
+import useAuth from '../../hooks/useAuth';
 import classes from './AuthForm.module.scss';
 
 function Login() {
-    const { verifyAuth, auth } = useAuth();
+    const { auth } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
         if (auth) {
         navigate('/');
         }
-    }, [auth]);
+    }, [auth, navigate]);
 
     const login = async (e) => {
         e.preventDefault();
@@ -24,11 +25,11 @@ function Login() {
             email,
             password,
         });
-        await verifyAuth();
         navigate('/');
+        toast.success("login successful")
         } catch (err) {
         console.log(err);
-        verifyAuth();
+        toast.error("error logining")
         }
     };
     return (
